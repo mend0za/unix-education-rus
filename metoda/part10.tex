@@ -267,7 +267,7 @@ sigaddset(&mask1, SIGQUIT);
 
 sigfillset(&mask2);
 
-sigdekset(&mask2, SIGCHLD);
+sigdelset(&mask2, SIGCHLD);
 
                          Обработчик сигналов.
 
