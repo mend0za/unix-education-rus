@@ -5,7 +5,7 @@ HTMLBZIP=metoda-html.tar.bz2
 
 all: $(DEST)
 
-$(DEST): *.tex 
+$(DEST): $(SRC) 
 	latex metoda.tex
 	latex metoda.tex
 
@@ -23,7 +23,8 @@ bzip2: clean
 	tar -cjf metoda-html.tar.bz2 metoda-html
 	
 html: all
-	hevea $(HTMLKEYS) -o ../metoda.html metoda.tex
+	hevea $(HTMLKEYS) -o metoda.html metoda.tex
+#	latex2html -split +0 -html_version=3.2,i18n -iso_language RU.RU -no_images metoda.tex
 	
 
 		
