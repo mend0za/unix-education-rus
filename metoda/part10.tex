@@ -69,7 +69,7 @@
 
 Каждому сигналу присвоено мнемоническое имя (например, SIGINT), которое указывает, для чего обычно используется сигнал этого типа.  Имена сигналов определены в \verb+<signal.h>+.
 
-\subsection{Посылка сигналов}
+\section{Посылка сигналов}
 
 \begin{verbatim}
 #include<sys/types.h>
@@ -90,7 +90,7 @@ int kill (pid_t pid, int sig);
 
 При неудачном вызове kill возвращает -1 и переменной errno присваивается значения: EPERM (нельзя послать чужому процессу), ESRCH (такого процесса нет) , EINVAL (sig содержит неверный номер сигнала).
 
-\subsubsection{Смысл параметра PID}
+\subsection{Смысл параметра PID}
 
 Pid==0 - сигнал посылается всем процессам группы, к которой принадлежит процесс, пославший сигнал;
 
@@ -100,7 +100,7 @@ Pid==-1 и EUID администратора, то сигнал посылается всем процессам, кроме некото
 
 Pid<0 и не равен -1 - посылается всем процессам, идентификатор группы которых равен по модулю PID, включая пославший процесс, если он также входит в эту группу.
 
-\subsubsection{Посылка сигнала самому себе}
+\subsection{Посылка сигнала самому себе}
 
 \begin{verbatim}
 #include<signal.h>
@@ -109,7 +109,7 @@ int raise (int sig)
 \end{verbatim}
 вызывающему процессу посылается сигнал. В случае успеха возвращает 0. Например, \verb+raise (SIGKILL)+.
 
-\subsection{Таймеры}
+\section{Таймеры}
 
 \verb+setitimer+ - установка разных таймеров (3 вида).
 
@@ -140,7 +140,7 @@ int pause (void);
 
 Некоторые сигналы ( SIGABRT, SIGBUS, SIGQUIT, SIGILL и другие) инициируют аварийное завершение со сбросом значения переменных, регистров и т.д. в core (dump).
 
-\subsection{Имена сигналов (по алфавиту, выборочно)}
+\section{Имена сигналов (по алфавиту, выборочно)}
 
 Определены в \verb+<signal.h>+
 \begin{itemize}
@@ -170,7 +170,7 @@ int pause (void);
 \item SIGXFSZ - превышение лимита на размер файла.
 \end{itemize}
             
-\subsection{Наборы сигналов}
+\section{Наборы сигналов}
 \label{sigset}
 \emph{Набор сигналов} - это список сигналов, которые необходимо передать системному вызову.
 
@@ -178,7 +178,7 @@ int pause (void);
 
 Выбор сигналов - либо из полного, удаляя ненужные, либо из пустого набора, добавляя необходимые.
 
-\subsubsection{Инициализация набора}
+\subsection{Инициализация набора}
 
 \begin{verbatim}
 #include <signal.h>
@@ -187,7 +187,7 @@ int sigemptyset(sigset_t *set);
 int sigfillset(sigset_t *set);
 \end{verbatim}
 
-\subsubsection{Добавление и удаление сигналов}
+\subsection{Добавление и удаление сигналов}
 
 \begin{verbatim}
 int sigaddset(sigset_t *set, int signo);
@@ -195,7 +195,7 @@ int sigaddset(sigset_t *set, int signo);
 int sigdelset(sigset_t *set, int signo);
 \end{verbatim}
 
-\subsubsection{Типовой сценарий работы с набором}
+\subsection{Типовой сценарий работы с набором}
 \begin{verbatim}
 sigset_t mask1, mask2;
 
@@ -208,7 +208,7 @@ sigfillset(&mask2);
 sigdelset(&mask2, SIGCHLD);
 \end{verbatim}
 
-\subsection{Обработчик сигналов}
+\section{Обработчик сигналов}
 
 После определения списка можно задать обработку сигналов:
 
@@ -225,7 +225,7 @@ int sigaction(int signo, const struct sigaction *act, struct sigaction
 
 \verb+oact+ - если не NULL, то в эту структуру сохранится старый обработчик.
 
-\subsection{Разбор структуры sigaction}
+\section{Разбор структуры sigaction}
 
 \begin{verbatim}
 struct sigaction {
@@ -257,7 +257,7 @@ viod (*sa_sigaction)(int, siginfo_t*, void*);
 \item \verb+SA_RESTART+ - повтор прерванного сигналом системного вызова.
 \end{enumerate}
 
-\subsection{Ненадежные сигналы (устаревшая версия)}
+\section{Ненадежные сигналы (устаревшая версия)}
 
 \begin{verbatim}
 #include<signal.h>
@@ -270,7 +270,7 @@ void (*signal(int sig, void(*disp)(int))) (int);
 
 \verb+Пример: signal(SIGINT, SIG_IGN);+
 
-\subsection{Блокирование сигналов}
+\section{Блокирование сигналов}
 
 \verb+int sigprocmask(int how, const sigset_t *set, sigset_t *oset);+
 \begin{itemize}
