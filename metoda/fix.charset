@@ -1,0 +1,14 @@
+# !/bin/sh
+
+#sed '/End Of Navigation/I  a\
+#"All in One" compressed file: <A HREF="/metoda-html.tar.bz2">HTML in tar.bz2</A> | <A HREF="/metoda-tex.tar.bz2">LaTeX in tar.bz2</A> <BR>
+#' metoda/index.html >index.new ; mv index.new metoda/index.html
+
+cd metoda
+for i in `ls *.html`
+do
+	sed 's/iso-8859-1/koi8-r/g' $i >$i.new
+	mv $i.new $i
+done
+cd ..
+

@@ -1,0 +1,49 @@
+\documentclass{book} 
+
+\usepackage[T2A]{fontenc}
+\usepackage[koi8-r]{inputenc}
+\usepackage[english,russian]{babel}
+%\usepackage{pscyr}
+\usepackage{amssymb}
+
+\title{Методическое пособие по курсу ОСиС}
+\author{Шахов Владимир Владимирович}
+\date{последнее обновление - \today}
+
+
+\begin{document}
+
+\frontmatter
+
+\maketitle
+\tableofcontents
+
+\mainmatter
+
+%введение
+\include{part1}
+%командная строка
+\include{part2}
+%оболочка (shell)
+\include{part3}
+% vi
+\include{part4}
+% regexp и sed
+\include{part5}
+% файлы и файловая система
+\include{part6} 
+% процессы
+\include{part7}
+% Unix - среда программирования
+\include{part8}
+
+% Инструментальные средства 
+\include{part9}
+
+% Процессы и сигналы
+\include{part10}
+
+\backmatter
+\include{literatura}
+
+\end{document}

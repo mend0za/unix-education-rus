@@ -1,0 +1,635 @@
+
+                         Лекция No.10. IPC. Сокеты.
+
+   Коммуникационный узел, обеспечивающий прием и передачу данных для
+   объекта (процесса), называется сокетом.
+
+   Сокеты имеют соответствующий интерфейс доступа в файловую систему
+   UNIX, а также, как обычные файлы, адресуются некоторым целым числом.
+
+   Коммуникационный домен - набор характеристик взаимодействия, таких
+   как:
+
+     * схема адресации объектов;
+     * их расположение;
+     * протоколы передачи данных.
+
+   Сетевой протокол - набор правил обмена сообщениями между компьютерами.
+
+   Существуют две модели (способа) связи:
+
+    1. с установлением соединения (виртуальное соединение).
+
+   Пример: HTTP, POP3, FTP.
+
+   Обмен происходит в определенном порядке: сообщение - подтверждение.
+
+    2. без установления соединения (модель датаграм- datagram).
+
+   Пример: ICMP, ICQ протокол.
+
+   Сообщения отправляются без проверки доставки, широковещательные
+   сообщения и т.д.
+
+   Чтобы процессы могли связаться, существует механизм определения
+   сетевого адреса компьютера, на котором находится другой процесс.
+
+                               Типы доменов.
+
+   Есть два основных типа: INET и UNIX.
+
+   AF_INET - взаимодействие процессов удаленных систем (TCP/IP
+   протоколы).
+
+   AF_UNIX - локальное межпроцессное взаимодействие в рамках одной ОС
+   (внутренние протоколы).
+
+                               Типы сокетов.
+
+                                  AF_UNIX
+
+                                  AF_INET
+
+   SOCK_DGRAM
+
+   Сокет датаграм
+
+                                     +
+
+                                     +
+
+   SOCK_STREAM
+
+   Сокет потока
+
+                                     +
+
+                                     +
+
+   SOCK_SEQPACKET
+
+   Сокет последовательности пакетов
+
+                                     -
+
+                                     -
+
+   SOCK_RAW
+
+   Сокет низкого уровня
+
+                                     -
+
+                                     +
+
+   Два последних типа мы рассматривать не будем.
+
+                             Создание сокетов.
+
+   Создаются абонентские точки (transport end points).
+
+   #include<sys/socket.h>
+
+   int socket(int domain, int type, int protocol);
+
+   domain - AF_INET или AF_UNIX.
+
+   type - SOCK_DGRAM, SOCK_STREAM, SOCK_RAW.
+
+   protocol - обычно 0 (AF_UNIX: для SOCK_DGRAM по умолчанию UDP,
+   SOCK_STREAM - TCP).
+
+   Возвращает целое число - аналог файлового дескриптора, который служит
+   для адресации данного сокета в последующих вызовах.
+
+                           Схема работы сокетов.
+
+   При работе с сокетами (в общем виде) создается коммуникационный канал,
+   который определяется двумя узлами: источником и получателем - и
+   характеризуется пятью параметрами:
+
+    1. коммуникационный протокол;
+    2. локальный адрес;
+    3. локальный процесс;
+    4. удаленный адрес;
+    5. удаленный процесс.
+
+                           Схема TCP-соединения.
+
+   Сервер Клиент
+
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   создание socket() socket() создание
+
+   0x08 graphic
+   0x08 graphic
+   связывание bind()
+
+   сетевого
+
+   адреса
+
+   0x08 graphic
+   с ID сокета
+
+   0x08 graphic
+   0x08 graphic
+   включение listen()
+
+   0x08 graphic
+   0x08 graphic
+   приема connect() выполнение
+
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   прием запроса accept() запроса на
+
+   на установку подключ-е
+
+   0x08 graphic
+   соединения
+
+   0x08 graphic
+
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   прием/ read() write() прием/
+
+   0x08 graphic
+   0x08 graphic
+   передача передача
+
+   данных
+
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   write() read()
+
+   закрытие
+
+   0x08 graphic
+   close() соединения
+
+                           Схема UDP-соединения.
+
+   Сервер Клиент
+
+   0x08 graphic
+   0x08 graphic
+
+   0x08 graphic
+   0x08 graphic
+   создание socket() socket()
+
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   связывание bind() bind()
+
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+   прием/передача recvfrom()
+
+   0x08 graphic
+   0x08 graphic
+   sendto() прием/
+
+   0x08 graphic
+   передача
+
+   0x08 graphic
+   0x08 graphic
+   0x08 graphic
+
+   0x08 graphic
+
+   0x08 graphic
+   0x08 graphic
+   recvfrom()
+
+   0x08 graphic
+   0x08 graphic
+   sendto()
+
+   0x08 graphic
+
+   0x08 graphic
+   close()
+
+   Сервер: ожидание подключения;
+
+   в цикле :
+
+   установка соединения;
+
+   создание дочернего процесса для работы с соединением;
+
+   если дочерний, в цикле принимать сообщения от клиента и отправлять их
+   серверу.
+
+   Клиент: соединяет сокет с адресом серверного процесса;
+
+   в цикле:
+
+   посылает данные и принимает ответы от сервера.
+
+                            Адресация Internet.
+
+   Адрес IP (internet protocol) - 4 десятичные цифры (4 байта),
+   разделенные точками - IPv4.
+
+   Например: 172.30.0.1. - общежитие No.1 в БГУИР сети.
+
+   IP-адрес содержит достаточную информацию для определения сети и
+   компьютера в ней.
+
+   Примечание: сетевые вызовы UNIX не могут работать с IP-адресами в
+   таком формате. В UNIX адреса хранятся в структуре типа in_addr_t.
+
+   Для проебразования адреса a.b.c.d в in_addr_t:
+
+   #include <arpa/inet.h>
+
+   in_addr_t inet_addr(const char *ip_address);
+
+   Возвращает -1, если ошибка.
+
+   Пример: in_addr_t server = inet_addr("172.30.0.1");
+
+   В файле <netinet/in.h> определена константа INADDR_ANY, содержащая
+   локальный адрес компьютера в формате in_addr_t.
+
+                                Связывание.
+
+   #include <sys/types.h>
+
+   #include <sys/socket.h>
+
+   int bind(int sockfd, const struct sockaddr *address, size_t add_len);
+
+   sockfd - дескриптор сокета;
+
+   address - указатель на обобщенную структуру адреса сокета;
+
+   add_len - длинна адреса.
+
+   Возвращает 0 в случае успеха.
+
+   0x08 graphic
+   0x08 graphic
+   struct sock_addr {
+
+   sa_family_t sa_family; //семейство адресов
+
+   char sa_data[]; //адрес сокета
+
+   };
+
+   0x08 graphic
+   #include <netinet/in.h>
+
+   0x08 graphic
+   struct sockaddr_in {
+
+   sa_family_t sa_family; //AF_INET
+
+   in_port_t sin_port; //номер порта
+
+   struct in_addr sin_addr; //IP-адрес
+
+   unsigned char sin_zero[8]; //поле выравнивания
+
+   };
+
+   0x08 graphic
+   #include <sys/un.h>
+
+   0x08 graphic
+   struct sockaddr_un{
+
+   short sun_family; //=AF_UNIX
+
+   char sun_path[108];
+
+   };
+
+   Пример С1:
+
+   #define SIZE sizeof(struct sockaddr_in)
+
+   struct sockaddr_in server = {AF_INET, 7000, INADDR_ANY};
+
+   sockfd = socket(AF_INET, SOCK_STREAM, 0);
+
+   bind(sockfd, (struct sockaddr *) &server, SIZE);
+
+                             Включение приема.
+
+   После связывания и перед тем, как какой-нибудь клиент сможет
+   подключиться к данному сокету, сервер должен включить прием
+   соединений.
+
+   #include <sys/socket.h>
+
+   int listen(int sockfd, int queue_size);
+
+   sockfd - дескриптор сокета, полученный в результате вызова socket;
+
+   queue_size - ограничение количества запросов на соединение в очереди
+   сервера (по XSI минимальное ограничение сверху - 5).
+
+   Пример С2: listen (sockfd, 5);
+
+                       Прием запросов на соединение.
+
+   Когда сервер получает запрос на соединение, он должен создать новый
+   сокет для работы с новым соединением.
+
+   #include <sys/types.h>
+
+   #include <sys/socket.h>
+
+   int accept (int sockfd, struct sockaddr *address, size_t *add_len );
+
+   Первый сокет используется только для установления соединения.
+
+   sockfd - дескриптор сокета;
+
+   В address записывается информация о клиенте, полученная после
+   системного вызова. Этот параметр можно установить в NULL, это
+   означает, что информация о клиенте нас не интересует.
+
+   add_len - указатель на размер структуры адреса (первоначально), после
+   возврата содержит действительный размер записанной структуры.
+
+   Вызов возвращает -1 в случае ошибки.
+
+   Пример С3:
+
+   for (;;){
+
+   if ( (newsock = accept(sockfd, NULL, NULL)) == -1 ){
+
+   perror ("Ошибка accept");
+
+   continue;
+
+   };
+
+   С4: создание дочернего процесса для работы с клиентским соединением.
+   Если дочерний, то в цикле принимает и отправляет данные от клиента.
+
+   };
+
+                            Подключение клиента.
+
+   Для выполнения запроса на подключение к серверному процессу клиент
+   использует:
+
+   #include <sys/types.h>
+
+   #include <sys/socket.h>
+
+   int connect (int csockfd, const struct sockaddr *adderss, size_t
+   add_len);
+
+   csockdf - дескриптор сокета клиента (не сервера);
+
+   address - указатель на структуру с адресом сервера;
+
+   add_len - размер используемой структуры адреса.
+
+   Пример К1:
+
+   #define SIZE sizeof(struct sockaddr_in)
+
+   main()
+
+   {
+
+   int sockfd;
+
+   struct sockaddr_in server = {AF_INET, 7000, INADDR_ANY};
+
+   server.sin_addr.s_addr = inet_addr ("172.30.0.1");
+
+   if ( (sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) exit(1);
+
+   if ( connect(sockfd, (struct sockaddr *) &server, SIZE) == -1 ) exit
+   (2);
+
+   //обмен информацией с сервером
+
+   }
+
+                             Пересылка данных.
+
+   Связь между клиентом и сервером установлена.
+
+   Для сокетов типа SOCK_STREAM клиент и сервер получают файловый
+   дескриптор, в который можно писать и читать через write/read (см.
+   каналы).
+
+   Для задания дополнительных параметров пересылки по сети:
+
+   #include <sys/types.h>
+
+   #include <sys/socket.h>
+
+   ssize_t recv ( int sockfd, void *buffer, size_t length, int flags);
+
+   ssize_t send ( int sockfd, const void *buffer, size_t length, int
+   flags);
+
+   Если flags=0, то ведут себя идентично read/write.
+
+   Параметр flags может принимать значения:
+
+   для recv:
+
+   MSG_PEEK - "просматривает" данные, не удаляя их из сокета;
+
+   MSG_OOB - обычные данные пропускаются;
+
+   MSG_WAITALL - возврат из вызова только после получения всех данных.
+
+   для send:
+
+   MSG_OOB - передать "срочные" данные;
+
+   MSG_DONTROUTE - при передаче игнорируется маршрутизация, и данные
+   будут передаваться по "кратчайшему" пути (но не обязательно быстрее).
+
+   Пример С4:
+
+   char c;
+
+   if (fork() == 0){
+
+   while (recv(newsockfd, &c, 1, 0)>0){
+
+   c = toupper(c);
+
+   send(newsockfd, &c, 1, 0);
+
+   };
+
+   }
+
+   Пример К2:
+
+   int sockfd;
+
+   char c, rc;
+
+   K1: подключение клиента
+
+   for (rc=='\n';;){
+
+   if (rc=='\n') printf("Введите строчный символ \n");
+
+   c=getchar();
+
+   send(sockfd, &c, 1, 0);
+
+   recv(sockfd, &rc, 1, 0);
+
+   }
+
+                          Закрытие TCP-соединения.
+
+   При работе с сокетами важно корректно реагировать на завершение работы
+   абонентского процесса (сервера или клиента). Так как сокет -
+   двухсторонний механизм, нельзя предсказать, когда произойдет разрыв
+   соединения: на записи или на чтении.
+
+   Если процесс пишет в разорванный сокет через write или send, то
+   получает сигнал SIGPIPE.
+
+   Если процесс читает из оборванного сокета через read или recv, то он
+   получит нулевое значение. Поэтому надо проверять возвращаемое значение
+   операции чтения, чтобы не зацикливать программу.
+
+   Для закрытия используется системный вызов close (см. каналы).
+
+   Для сокета типа SOCK_STREAM вызов может блокироваться до тех пор, пока
+   данные не будут доставлены принимающему процессу (так как система
+   гарантирует доставку всех записанных в сокет данных).
+
+   Для сокета типа SOCK_DGRAM закрытие произойдет немедленно.
+
+                      Прием и передача UDP-сообщений.
+
+   Для сокетов UDP есть два новых вызова (они могут использоваться и в
+   TCP):
+
+   ssize_t recvfrom (int sockfd, void* message, size_t length, int flags,
+   struct sockaddr *send_addr, size_t *add_len);
+
+   ssize_t sendto (int sockfd, const void* message, size_t length, int
+   flags, const struct sockaddr *dest_addr, size_t *dest_len);
+
+   sockfd - связанный с локальным адресом сокет;
+
+   message - указатель на буфер принимаемой/отправляемой дейтаграммы;
+
+   length - число байт, которые должны быть считаны/записаны из буфера;
+
+   flags - как у send и recv соответственно;
+
+   send_addr - в него после возврата из вызова будет помещена информация
+   об адресе и порте, откуда пришел полученный пакете. Если
+   send_addr=NULL, то вызов работает, как recv;
+
+   add_len - указатель на переменную, содержащую длину записанного в
+   send_addr адреса;
+
+   dest_addr - задает адрес узла и порт, куда должно быть передано
+   сообщение;
+
+   dest_len - определяет длину этого адреса.
+
+   Пример:
+
+   char c;
+
+   recvfrom (sockfd, &c, 1, 0, &client, &client_len);
+
+   sendto (sockfd, &c, 1, 0, &client, &client_len);
+
+                          Адресация в домене UNIX.
+
+   Адрес сокетов в домене UNIX - имя файла. При вызове bind файл
+   создается.
+
+   Пример: сервера (AF_UNIX)
+
+    1. sockfd = socket (AF_UNIX, SOCK_DGRAM, 0);
+    2. unlink ("./echo.server");
+    3. bzero (&serv_addr, sizeof(serv_addr));
+    4. strcpy(serv_addr.sun_path, "./echo.server");
+    5. serv_addr.sun_family = AF_UNIX;
+    6. saddrlen = sizeof
+       (serv_addr.sun_family)+strlen(serv_addr.sun_path);
+    7. bind (sockfd, (struct sockaddr *) &serv_addr, saddrlen);
+
+   Пример: клиента (AF_UNIX)
+
+    1. sockfd = socket (AF_UNIX, SOCK_DGRAM, 0);
+    2. bzero (&serv_addr, sizeof(serv_addr));
+    3. strcpy(serv_addr.sun_path, "./echo.server");
+    4. serv_addr.sun_family = AF_UNIX;
+    5. saddrlen = sizeof
+       (serv_addr.sun_family)+strlen(serv_addr.sun_path);
+    6. strcpy(clnt_addr.sun_path, "./tmp/clnt.xxxx");
+    7. mktemp(clnt_addr.sun_path); - возвращает уникальное имя,
+       основанное на шаблоне и идентификаторе вызывающего процесса;
+    8. bzero (&clnt_addr, sizeof(clnt_addr));
+
+    8. clnt_addr.sun_family = AF_UNIX;
+    9. saddrlen = sizeof
+       (clnt_addr.sun_family)+strlen(clnt_addr.sun_path);
+
+   10)bind (sockfd, (struct sockaddr *) &clnt_addr, saddrlen);
+
+   Локальные сокеты (AF_UNIX)
+
+   данные
+
+   установление
+
+   соединения
+
+   ожидание
+
+   ожидание
+
+   данные
+
+   ожидание
+
+   Обобщенный сокет
+
+   (generic socket)
+
+   Сокеты для связи через сеть (AF_INET)
