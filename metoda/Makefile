@@ -1,7 +1,6 @@
 SRC=metoda.tex literatura.tex part1.tex part2.tex part3.tex part4.tex part5.tex part6.tex part7.tex part8.tex part9.tex part10.tex
 DEST=metoda.dvi
-#HTMLKEYS= -local_icons -address "mendoza (at) avb.bas-net.by" -info "Методическое пособие по курсу ОСиС.<BS>Кафедра информатики БГУИР." -antialias -antialias_text
-HTMLKEYS=-charset koi8-r -exec /bin/date
+HTMLKEYS=-charset cp1251 -exec /bin/date
 HTMLBZIP=metoda-html.tar.bz2
 
 all: $(DEST)
