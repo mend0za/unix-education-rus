@@ -1,4 +1,4 @@
-SRC=metoda.tex literatura.tex part1.tex part2.tex part3.tex part4.tex part5.tex part6.tex part7.tex part8.tex part9.tex part10.tex
+SRC=metoda.tex literatura.tex fdl.tex part1.tex part2.tex part3.tex part4.tex part5.tex part6.tex part7.tex part8.tex part9.tex part10.tex 
 DEST=metoda.dvi
 HTMLKEYS=-charset cp1251 -exec /bin/date
 HTMLBZIP=metoda-html.tar.bz2
@@ -6,12 +6,13 @@ HTMLBZIP=metoda-html.tar.bz2
 all: $(DEST)
 
 $(DEST): *.tex 
-	texi2dvi metoda.tex
+	latex metoda.tex
+	latex metoda.tex
 
 pdf: metoda.pdf
 
-metoda.pdf:
-	dvipdf $(DEST) $@
+metoda.pdf: $(DEST)
+	dvipdft -p a4 -o $@ $(DEST) 
 
 clean:
 	@rm -f *.aux *.log *.toc *.dvi
