@@ -1,4 +1,26 @@
-\documentclass{book} 
+% some formating
+\ifx\pdfoutput\undefined % We're not running pdftex
+\documentclass[dvips,11pt,a4paper,twoside]{scrbook}
+\else
+\documentclass[pdftex,11pt,a4paper,twoside]{book}
+\usepackage{thumbpdf}
+\pdfcompresslevel=9
+\fi
+
+\ifx\pdfoutput\undefined % We're not running pdftex
+\usepackage[plainpages=true]{hyperref}
+\usepackage{color}
+\else
+\usepackage[colorlinks,hyperindex,plainpages=false,unicode]{hyperref}
+\usepackage{keyval}
+\hypersetup{pdfauthor={Vlad Shakhov}}
+\def\pdfBorderAttrs{/Border [0 0 0] } % No border arround Links
+\makeatletter
+\newcounter{chapter.H}
+\setcounter{chapter.H}{0}
+\makeatother
+\fi
+
 
 \usepackage[T2A]{fontenc}
 \usepackage[cp1251]{inputenc}
@@ -15,7 +37,7 @@
 %           pdftex}
 
 \title{Учебное пособие по курсу ОСиС}
-\author{Шахов Владимир Владимирович}
+\author{Влад 'mend0za' Шахов}
 \date{последнее обновление - \today}
 
 \begin{document}
@@ -24,7 +46,7 @@
 
 \maketitle
 
-Copyright \copyright Владимир 'mend0za' Шахов, 2002,2003,2004, 2005
+Copyright \copyright Владимир 'mend0za' Шахов, 2002-2007
 \bigskip
 
 Каждый имеет право воспроизводить, распространять и/или вносить изменения в настоящий Документ в соответствии с условиями GNU Free Documentation License, Версией 1.2 или любой более поздней версией, опубликованной Free Software Foundation;
@@ -65,9 +87,13 @@ Copyright \copyright Владимир 'mend0za' Шахов, 2002,2003,2004, 2005
 \include{part10}
 
 % IPC.Каналы и FIFO
-\include{part11}
+%\include{part11}
+
+% IPC. Сокеты
+\include{part12}
 
 \backmatter
+\addcontentsline{toc}{part}{Литература}
 \include{literatura}
 
 \include{fdl}
