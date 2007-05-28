@@ -508,3 +508,27 @@ Echo-сервер делает весьма прозаическую вещь: все, что к нему приходит, отсылаетс
 Например устойчива к сбоям модель "многопроцессность+FSM". Или производительна (на Linux) "многопоточность+FSM".
 Cнова повторюсь. Нет "самой лучшей модели", есть наиболее подходящая к вашим условиям.
 
+\section{Unix-domain сокеты или локальные сокеты}
+
+Адрес сокетов в домене UNIX - имя файла. При вызове bind файл создаётся в файловой системе.
+\begin{verbatim}
+Пример сервера (AF_UNIX)
+1. sockfd = socket (AF_UNIX, SOCK_DGRAM, 0);
+2. unlink ("./echo.server");
+3. bzero (&serv_addr, sizeof(serv_addr));
+4. strcpy(serv_addr.sun_path, "./echo.server");
+5. serv_addr.sun_family = AF_UNIX;
+6. saddrlen = sizeof
+   (serv_addr.sun_family)+strlen(serv_addr.sun_path);
+7. bind (sockfd, (struct sockaddr *) &serv_addr, saddrlen);
+\end{verbatim}
+
+\begin{verbatim}
+1. sockfd = socket (AF_UNIX, SOCK_DGRAM, 0);
+2. bzero (&serv_addr, sizeof(serv_addr));
+3. strcpy(serv_addr.sun_path, "./echo.server");
+4. serv_addr.sun_family = AF_UNIX;
+5. saddrlen = sizeof
+   (serv_addr.sun_family)+strlen(serv_addr.sun_path);
+6. strcpy(clnt_addr.sun_path, "./tmp/clnt.xxxx");
+\end{verbatim}
