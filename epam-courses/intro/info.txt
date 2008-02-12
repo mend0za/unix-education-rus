@@ -1,4 +1,6 @@
-INTRO:
+LINUX-INTRO:
+
+Предварительные курсы: нет.
 
 Цели: quick introduction to linux/unix. 
 
