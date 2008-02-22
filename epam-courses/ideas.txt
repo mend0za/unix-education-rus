@@ -1,0 +1,6 @@
+
+1. Version control systems (CVS, SVN, GIT) // Gleb Stiblo
+2. Modules unit-testing // Pavel Karneliuk
+3. Programming style, design and analysis // Pavel Karneliuk
+4. Linux distributions and package systems (installation/deinstallation, upgrade, custom install and so on) // Dmitry Vensko
+
