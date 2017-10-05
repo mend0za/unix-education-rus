@@ -1,17 +1,7 @@
 % some formating
-\ifx\pdfoutput\undefined % We're not running pdftex
-\documentclass[dvips,11pt,a4paper,twoside]{scrbook}
-\else
-\documentclass[pdftex,11pt,a4paper,twoside]{book}
-\usepackage{thumbpdf}
-\pdfcompresslevel=9
-\fi
+\documentclass[11pt,a4paper,twoside]{book}
 
-\ifx\pdfoutput\undefined % We're not running pdftex
-\usepackage[plainpages=true]{hyperref}
-\usepackage{color}
-\else
-\usepackage[colorlinks,hyperindex,plainpages=false,unicode]{hyperref}
+\usepackage[colorlinks,hyperindex,plainpages=false,pdfencoding=auto,unicode]{hyperref}
 \usepackage{keyval}
 \hypersetup{pdfauthor={Vlad Shakhov}}
 \def\pdfBorderAttrs{/Border [0 0 0] } % No border arround Links
@@ -19,26 +9,25 @@
 \newcounter{chapter.H}
 \setcounter{chapter.H}{0}
 \makeatother
-\fi
 
 \usepackage{cmap}
-\usepackage[cp1251]{inputenc}
-\usepackage[TS1,T2A]{fontenc}
-\usepackage[english,russian]{babel}
-%\usepackage{pscyr}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian,english]{babel}
 \usepackage{amssymb}
 \pagenumbering{arabic}
-%\usepackage{hyperref}
-%\hypersetup{colorlinks, 
-%           citecolor=black,
-%           filecolor=black,
-%           linkcolor=black,
-%           urlcolor=black,
-%           pdftex}
 
-\title{Учебное пособие по курсу ОСиС}
-\author{Влад 'mend0za' Шахов}
-\date{последнее обновление - \today}
+\usepackage{polyglossia}   %% Р·Р°РіСЂСѓР¶Р°РµС‚ РїР°РєРµС‚ РјРЅРѕРіРѕСЏР·С‹РєРѕРІРѕР№ РІС‘СЂСЃС‚РєРё
+\setdefaultlanguage[spelling=modern]{russian}  %% СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РіР»Р°РІРЅС‹Р№ СЏР·С‹Рє РґРѕРєСѓРјРµРЅС‚Р°
+\setotherlanguage{english} %% РѕР±СЉСЏРІР»СЏРµС‚ РІС‚РѕСЂРѕР№ СЏР·С‹Рє РґРѕРєСѓРјРµРЅС‚Р°
+
+\setmainfont{CMU Serif}           %% Р·Р°РґР°С‘С‚ РѕСЃРЅРѕРІРЅРѕР№ С€СЂРёС„С‚ РґРѕРєСѓРјРµРЅС‚Р°
+\setsansfont{CMU Sans Serif}      %% Р·Р°РґР°С‘С‚ С€СЂРёС„С‚ Р±РµР· Р·Р°СЃРµС‡РµРє
+\setmonofont{CMU Typewriter Text} %% Р·Р°РґР°С‘С‚ РјРѕРЅРѕС€РёСЂРёРЅРЅС‹Р№ С€СЂРёС„С‚
+
+\title{РЈС‡РµР±РЅРѕРµ РїРѕСЃРѕР±РёРµ РїРѕ РєСѓСЂСЃСѓ РћРїРµСЂР°С†РёРѕРЅРЅС‹Рµ РЎРёСЃС‚РµРјС‹ Рё РЎСЂРµРґС‹ (РћРЎРёРЎ)}
+\author{Р’Р»Р°Рґ 'mend0za' РЁР°С…РѕРІ}
+\date{РїРѕСЃР»РµРґРЅРµРµ РѕР±РЅРѕРІР»РµРЅРёРµ - \today}
 
 \begin{document}
 
@@ -46,16 +35,16 @@
 
 \maketitle
 
-Copyright \copyright Владимир 'mend0za' Шахов, 2002-2007
+Copyright \copyright Р’Р»Р°РґРёРјРёСЂ 'mend0za' РЁР°С…РѕРІ, 2002-2007
 \bigskip
 
-Каждый имеет право воспроизводить, распространять и/или вносить изменения в настоящий Документ в соответствии с условиями GNU Free Documentation License, Версией 1.2 или любой более поздней версией, опубликованной Free Software Foundation;
+РљР°Р¶РґС‹Р№ РёРјРµРµС‚ РїСЂР°РІРѕ РІРѕСЃРїСЂРѕРёР·РІРѕРґРёС‚СЊ, СЂР°СЃРїСЂРѕСЃС‚СЂР°РЅСЏС‚СЊ Рё/РёР»Рё РІРЅРѕСЃРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ РІ РЅР°СЃС‚РѕСЏС‰РёР№ Р”РѕРєСѓРјРµРЅС‚ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ СѓСЃР»РѕРІРёСЏРјРё GNU Free Documentation License, Р’РµСЂСЃРёРµР№ 1.2 РёР»Рё Р»СЋР±РѕР№ Р±РѕР»РµРµ РїРѕР·РґРЅРµР№ РІРµСЂСЃРёРµР№, РѕРїСѓР±Р»РёРєРѕРІР°РЅРЅРѕР№ Free Software Foundation;
 
-данный документ содержит следующий Текст, помещаемый на первой странице обложки "Учебное пособие по курсу ОСиС";
+РґР°РЅРЅС‹Р№ РґРѕРєСѓРјРµРЅС‚ СЃРѕРґРµСЂР¶РёС‚ СЃР»РµРґСѓСЋС‰РёР№ РўРµРєСЃС‚, РїРѕРјРµС‰Р°РµРјС‹Р№ РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ РѕР±Р»РѕР¶РєРё "РЈС‡РµР±РЅРѕРµ РїРѕСЃРѕР±РёРµ РїРѕ РєСѓСЂСЃСѓ РћРЎРёРЎ";
 
-данный документ не содержит неизменяемых секций;
+РґР°РЅРЅС‹Р№ РґРѕРєСѓРјРµРЅС‚ РЅРµ СЃРѕРґРµСЂР¶РёС‚ РЅРµРёР·РјРµРЅСЏРµРјС‹С… СЃРµРєС†РёР№;
 
-Копия настоящей Лицензии включена в раздел под названием "GNU Free Documentation License".
+РљРѕРїРёСЏ РЅР°СЃС‚РѕСЏС‰РµР№ Р›РёС†РµРЅР·РёРё РІРєР»СЋС‡РµРЅР° РІ СЂР°Р·РґРµР» РїРѕРґ РЅР°Р·РІР°РЅРёРµРј "GNU Free Documentation License".
 
 \bigskip
 
@@ -63,40 +52,40 @@ Copyright \copyright Владимир 'mend0za' Шахов, 2002-2007
 
 \mainmatter
 
-%введение
+%РІРІРµРґРµРЅРёРµ
 \include{part1}
-%командная строка
+%РєРѕРјР°РЅРґРЅР°СЏ СЃС‚СЂРѕРєР°
 \include{part2}
-%оболочка (shell)
+%РѕР±РѕР»РѕС‡РєР° (shell)
 \include{part3}
 % vi
 \include{part4}
-% regexp и sed
+% regexp Рё sed
 \include{part5}
-% файлы и файловая система
+% С„Р°Р№Р»С‹ Рё С„Р°Р№Р»РѕРІР°СЏ СЃРёСЃС‚РµРјР°
 \include{part6} 
-% процессы
+% РїСЂРѕС†РµСЃСЃС‹
 \include{part7}
-% Unix - среда программирования
+% Unix - СЃСЂРµРґР° РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ
 \include{part8}
 
-% Инструментальные средства 
+% РРЅСЃС‚СЂСѓРјРµРЅС‚Р°Р»СЊРЅС‹Рµ СЃСЂРµРґСЃС‚РІР° 
 \include{part9}
 
-% IPC.Процессы и сигналы
+% IPC.РџСЂРѕС†РµСЃСЃС‹ Рё СЃРёРіРЅР°Р»С‹
 \include{part10}
 
-% IPC.Каналы и FIFO
+% IPC.РљР°РЅР°Р»С‹ Рё FIFO
 %\include{part11}
 
-% IPC. Сокеты
+% IPC. РЎРѕРєРµС‚С‹
 \include{part12}
 
 % System V IPC.
 \include {part13}
 
 \backmatter
-\addcontentsline{toc}{part}{Литература}
+\addcontentsline{toc}{part}{Р›РёС‚РµСЂР°С‚СѓСЂР°}
 \include{literatura}
 
 \include{fdl}
